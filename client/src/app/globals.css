@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Pure Obsidian / Carbon Dark Mode (Default) */
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 6.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 12.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 12.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 12.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.9%;
+
+    --radius: 0.75rem;
+
+    --status-not-started: 0 0% 63.9%;
+    --status-in-progress: 250 95% 70%;  /* Premium violet accent */
+    --status-pending: 48 96% 53%;
+    --status-completed: 142 71% 45%;
+    --status-overdue: 0 84.2% 60.2%;
+  }
+
+  .light {
+    --background: 240 5.9% 97.6%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 9%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom Premium Utilities */
+.glass-panel {
+  background: rgba(18, 18, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Subtle Premium Glows */
+.glow-blue {
+  box-shadow: 0 4px 24px -2px rgba(99, 102, 241, 0.12); /* indigo/violet tint */
+}
+
+.glow-green {
+  box-shadow: 0 4px 24px -2px rgba(16, 185, 129, 0.12);
+}
+
+.glow-yellow {
+  box-shadow: 0 4px 24px -2px rgba(234, 179, 8, 0.1);
+}
+
+.glow-red {
+  box-shadow: 0 4px 24px -2px rgba(239, 68, 68, 0.12);
+}
+
+/* Kanban Drag Style */
+.kanban-column {
+  min-height: calc(100vh - 280px);
+}
+
+/* Light mode form control overrides */
+.light select,
+.light input[type="date"],
+.light input[type="number"],
+.light input[type="text"],
+.light textarea {
+  color: hsl(var(--foreground));
+}
+
+.light select option {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
