@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
+    "db:deploy": "prisma db push",
     "db:seed": "ts-node src/seed.ts"
   },
   "dependencies": {
