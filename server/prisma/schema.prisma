@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  googleId      String?        
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tasks         Task[]
+  notifications Notification[]
+  subscriptions Subscription[]
+}
+
+model Task {
+  id                String       @id @default(uuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  description       String?
+  category          String?      @default("General")
+  priority          String       @default("MEDIUM") // HIGH, MEDIUM, LOW
+  status            String       @default("NOT_STARTED") // NOT_STARTED, IN_PROGRESS, PENDING, COMPLETED, ARCHIVED
+  
+  // Timer fields
+  estimatedDuration Int          @default(0) // in minutes
+  actualDuration    Int          @default(0) // in minutes
+  remainingDuration Int          @default(0) // in minutes
+  lastStartedAt     DateTime?
+  isTimerRunning    Boolean      @default(false)
+  
+  dueDate           DateTime?
+  isRecurring       Boolean      @default(false)
+  recurrenceRule    String?      // DAILY, WEEKLY, MONTHLY
+  
+  // Task aging and status tracking
+  timeInPendingState Int         @default(0) // in minutes
+  completedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  timerLogs         TimerLog[]
+}
+
+model TimerLog {
+  id        String   @id @default(uuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int      @default(0) // in minutes
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // TIMER_EXPIRED, PENDING_REMINDER, OVERDUE_ALERT, SYSTEM
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  keysAuth  String
+  keysP256dh String
+  createdAt DateTime @default(now())
+}
