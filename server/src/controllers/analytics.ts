@@ -43,12 +43,12 @@ export const getDashboardStats = async (req: AuthenticatedRequest, res: Response
     });
 
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(t => t.status === 'COMPLETED').length;
-    const pendingTasks = tasks.filter(t => t.status === 'PENDING').length;
-    const notStartedTasks = tasks.filter(t => t.status === 'NOT_STARTED').length;
+    const completedTasks = tasks.filter((t: any) => t.status === 'COMPLETED').length;
+    const pendingTasks = tasks.filter((t: any) => t.status === 'PENDING').length;
+    const notStartedTasks = tasks.filter((t: any) => t.status === 'NOT_STARTED').length;
     
     // Overdue tasks: incomplete and due date has passed
-    const overdueTasks = tasks.filter(t => {
+    const overdueTasks = tasks.filter((t: any) => {
       return (
         ['NOT_STARTED', 'IN_PROGRESS', 'PENDING'].includes(t.status) &&
         t.dueDate &&
@@ -59,8 +59,8 @@ export const getDashboardStats = async (req: AuthenticatedRequest, res: Response
     // Metrics calculations
     const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
     
-    const totalEstimatedMinutes = tasks.reduce((sum, t) => sum + t.estimatedDuration, 0);
-    const totalActualMinutes = tasks.reduce((sum, t) => sum + t.actualDuration, 0);
+    const totalEstimatedMinutes = tasks.reduce((sum: number, t: any) => sum + t.estimatedDuration, 0);
+    const totalActualMinutes = tasks.reduce((sum: number, t: any) => sum + t.actualDuration, 0);
     
     const plannedHours = Number((totalEstimatedMinutes / 60).toFixed(1));
     const actualHours = Number((totalActualMinutes / 60).toFixed(1));
@@ -130,7 +130,7 @@ export const getDailyHistory = async (req: AuthenticatedRequest, res: Response):
       dailyMap[dateStr] = { total: 0, completed: 0 };
     }
 
-    tasks.forEach(task => {
+    tasks.forEach((task: any) => {
       const dateStr = new Date(task.createdAt).toISOString().split('T')[0];
       if (dailyMap[dateStr]) {
         dailyMap[dateStr].total += 1;
@@ -187,16 +187,16 @@ export const getReports = async (req: AuthenticatedRequest, res: Response): Prom
     });
 
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(t => t.status === 'COMPLETED').length;
+    const completedTasks = tasks.filter((t: any) => t.status === 'COMPLETED').length;
     const avgCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-    const totalFocusTime = tasks.reduce((sum, t) => sum + t.actualDuration, 0);
-    const totalPendingTime = tasks.reduce((sum, t) => sum + t.timeInPendingState, 0);
+    const totalFocusTime = tasks.reduce((sum: number, t: any) => sum + t.actualDuration, 0);
+    const totalPendingTime = tasks.reduce((sum: number, t: any) => sum + t.timeInPendingState, 0);
 
     // Find most delayed tasks (Completed tasks where actual duration exceeded estimated duration, sorted by difference)
     const delayedTasks = tasks
-      .filter(t => t.status === 'COMPLETED' && t.actualDuration > t.estimatedDuration)
-      .map(t => ({
+      .filter((t: any) => t.status === 'COMPLETED' && t.actualDuration > t.estimatedDuration)
+      .map((t: any) => ({
         id: t.id,
         name: t.name,
         category: t.category,
@@ -204,12 +204,12 @@ export const getReports = async (req: AuthenticatedRequest, res: Response): Prom
         actualDuration: t.actualDuration,
         difference: t.actualDuration - t.estimatedDuration,
       }))
-      .sort((a, b) => b.difference - a.difference)
+      .sort((a: any, b: any) => b.difference - a.difference)
       .slice(0, 5);
 
     // Group tasks by category
     const categoryMap: { [cat: string]: { total: number; completed: number } } = {};
-    tasks.forEach(t => {
+    tasks.forEach((t: any) => {
       const cat = t.category || 'General';
       if (!categoryMap[cat]) {
         categoryMap[cat] = { total: 0, completed: 0 };
@@ -282,8 +282,8 @@ export const getProductivityInsights = async (req: AuthenticatedRequest, res: Re
     const hourlyFocus: { [hour: number]: number } = {};
     for (let i = 0; i < 24; i++) hourlyFocus[i] = 0;
 
-    tasks.forEach(task => {
-      task.timerLogs.forEach(log => {
+    tasks.forEach((task: any) => {
+      task.timerLogs.forEach((log: any) => {
         const startHour = new Date(log.startTime).getHours();
         hourlyFocus[startHour] += log.duration;
       });
@@ -313,7 +313,7 @@ export const getProductivityInsights = async (req: AuthenticatedRequest, res: Re
 
     // 2. Analyze Frequent Postponements / Categories
     const categoryStats: { [cat: string]: { total: number; pendingCount: number; completedCount: number } } = {};
-    tasks.forEach(t => {
+    tasks.forEach((t: any) => {
       const cat = t.category || 'General';
       if (!categoryStats[cat]) {
         categoryStats[cat] = { total: 0, pendingCount: 0, completedCount: 0 };
@@ -349,7 +349,7 @@ export const getProductivityInsights = async (req: AuthenticatedRequest, res: Re
     let totalActual = 0;
     let underestimatedCount = 0;
 
-    completedTasks.forEach(t => {
+    completedTasks.forEach((t: any) => {
       totalEstimated += t.estimatedDuration;
       totalActual += t.actualDuration;
       if (t.actualDuration > t.estimatedDuration * 1.25) {
